@@ -35,12 +35,10 @@ jobs:
       - id: step_need_update
         if: success()
         run:
-          if [[ ${{ env.local_vers }} == ${{ env.remote_vers }} ]]; then
-            echo "Need to update to a new release from ${{ env.local_vers }}  to ${{ env.remote_vers }}"
-            echo "::set-output name=output::true"
+          if [[ "${{ env.local_vers }}" == "${{ env.remote_vers }}" ]]; then
+             echo "::set-output name=output::true"
           else
-            echo "No update needed, skipping. Version ${{ env.remote_vers }} "
-            echo "::set-output name=output::false"
+             echo "::set-output name=output::false"
           fi
           
 
