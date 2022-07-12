@@ -4,8 +4,8 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.step_get_remote_version.outputs.output }}
-      output2: ${{ steps.step_get_local_version.outputs.output }}
+      output1: ${{ steps.step_get_remote_version.outputs.remote_vers }}
+      output2: ${{ steps.step_get_local_version.outputs.local_vers }}
       output3: ${{ steps.step_need_update.outputs.output }}
     steps:
       - name: Check out repository code
@@ -22,7 +22,7 @@ jobs:
           vers="$(git describe --tags --abbrev=0).$(git log -1 --pretty='format:%cd' --date=format:'%Y%m%d%S')"
           echo "Current remote version: $vers"
           echo "remote_vers=$(vers)" >> $GITHUB_ENV
-          echo "::set-output name=output::$vers"
+          echo "::set-output name=remote_vers::$vers"
           
       - id: step_get_local_version
         run: |
@@ -30,13 +30,13 @@ jobs:
           vers="$(cat current_version 2>/dev/null)"
           echo "Current local version: $vers"
           echo "local_vers=$(vers)" >> $GITHUB_ENV
-          echo "::set-output name=output::$vers"
+          echo "::set-output name=local_vers::$vers"
 
       - id: step_need_update
         if: success()
         run:
-          echo "Result of test-app was '${{ steps.step_get_remote_version.output }}'"
-          echo "Result of test-app was '${{ steps.step_get_local_version.output }}'"
+          echo "Result of test-app was '${{ steps.step_get_remote_version.remote_vers }}'"
+          echo "Result of test-app was '${{ steps.step_get_local_version.local_vers }}'"
           if [[ "${{ steps.step_get_remote_version.output }}" == "${{ steps.step_get_local_version.output }}" ]]; then
              echo "::set-output name=output::true"
           else
