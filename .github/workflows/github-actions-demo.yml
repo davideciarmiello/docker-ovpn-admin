@@ -32,6 +32,21 @@ jobs:
           echo "local_vers=$(vers)" >> $GITHUB_ENV
           echo "::set-output name=local_vers::$vers"
 
+
+      #- name: Set the statuses of Job 1, Job 2, Job3 as output parameters
+      #  id: set_outputs
+      #  run: |
+      #    echo "::set-output name=status_job1::$(<pass_status_job1/status_job1.txt)"
+      #    echo "::set-output name=status_job2::$(<pass_status_job2/status_job2.txt)"
+      #    echo "::set-output name=status_job3::$(<pass_status_job3/status_job3.txt)"
+      
+      - name: Show the values of the outputs
+        run: |
+          # using the syntax steps.<step_id>.outputs.<output_name> to access the output parameters
+          echo "remote_vers = ${{ steps.step_get_remote_version.outputs.remote_vers }}"
+          echo "status_job2 = ${{ steps.set_outputs.outputs.status_job2 }}"
+          
+
       - id: step_need_update
         if: success()
         run:
