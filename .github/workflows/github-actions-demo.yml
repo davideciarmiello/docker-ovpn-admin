@@ -35,7 +35,7 @@ jobs:
       - id: step_need_update
         if: success()
         run:
-          if [[ "${{ env.local_vers }}" == "${{ env.remote_vers }}" ]]; then
+          if [[ "${{ steps.step_get_remote_version.output }}" == "${{ steps.step_get_local_version.output }}" ]]; then
              echo "::set-output name=output::true"
           else
              echo "::set-output name=output::false"
