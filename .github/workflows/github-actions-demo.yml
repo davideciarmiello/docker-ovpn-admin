@@ -49,7 +49,8 @@ jobs:
           
 
       - id: step_need_update
-        if: success() && steps.step_get_remote_version.remote_vers != steps.step_get_local_version.local_vers
+        #if: success() &&  steps.step_get_remote_version.remote_vers != steps.step_get_local_version.local_vers
+        if: success() && ${{ steps.step_get_remote_version.outputs.remote_vers != steps.step_get_local_version.outputs.local_vers }}
         run:
           echo "need update"
           echo "::set-output name=output::true"
