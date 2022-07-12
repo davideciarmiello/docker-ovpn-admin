@@ -35,6 +35,8 @@ jobs:
       - id: step_need_update
         if: success()
         run:
+          echo "Result of test-app was '${{ steps.step_get_remote_version.output }}'"
+          echo "Result of test-app was '${{ steps.step_get_local_version.output }}'"
           if [[ "${{ steps.step_get_remote_version.output }}" == "${{ steps.step_get_local_version.output }}" ]]; then
              echo "::set-output name=output::true"
           else
