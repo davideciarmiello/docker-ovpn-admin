@@ -6,7 +6,7 @@ jobs:
     outputs:
       output1: ${{ steps.step_get_remote_version.outputs.output }}
       output2: ${{ steps.step_get_local_version.outputs.output }}
-      #output1: ${{ steps.step1.outputs.output }}
+      output3: ${{ steps.step_need_update.outputs.output }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
@@ -21,7 +21,7 @@ jobs:
           cd ovpn-admin
           vers="$(git describe --tags --abbrev=0).$(git log -1 --pretty='format:%cd' --date=format:'%Y%m%d%S')"
           echo "Current remote version: $vers"
-          #echo "remote_vers=$(vers)" >> $GITHUB_ENV
+          echo "remote_vers=$(vers)" >> $GITHUB_ENV
           echo "::set-output name=output::$vers"
           
       - id: step_get_local_version
@@ -29,11 +29,20 @@ jobs:
           touch current_version
           vers="$(cat current_version 2>/dev/null)"
           echo "Current local version: $vers"
+          echo "local_vers=$(vers)" >> $GITHUB_ENV
           echo "::set-output name=output::$vers"
 
-      - id: step1
+      - id: step_need_update
         if: success()
-        run: echo "::set-output name=output::success"
+        run:
+          if [[ ${{ env.local_vers }} == ${{ env.remote_vers }} ]]; then
+            echo "Need to update to a new release from ${{ env.local_vers }}  to ${{ env.remote_vers }}"
+            echo "::set-output name=output::true"
+          else
+            echo "No update needed, skipping. Version ${{ env.remote_vers }} "
+            echo "::set-output name=output::false"
+          fi
+          
 
   job2:
     runs-on: ubuntu-latest
