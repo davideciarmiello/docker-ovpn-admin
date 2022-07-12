@@ -15,3 +15,15 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
+      - name: Clone flant/ovpn-admin repository
+        uses: GuillaumeFalourd/clone-github-repo-action@v2
+        with:
+          owner: 'flant'
+          repository: 'ovpn-admin'
+      - name: Access cloned repository content
+        run: |
+          cd ovpn-admin
+          ls -la
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply ovpn-admin changes
