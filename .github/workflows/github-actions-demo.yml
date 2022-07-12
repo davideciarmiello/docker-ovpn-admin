@@ -87,6 +87,14 @@ jobs:
     steps:
       - run: echo ${{needs.version-check.outputs.remote_vers}} ${{needs.version-check.outputs.local_vers}} ${{needs.version-check.outputs.output}}
       - run: echo "Save remote vers after success compile"
+      - name: Check out repository code
+        uses: actions/checkout@v3      
+      - name: Save remote version
+        run: |
+          echo ${{needs.version-check.outputs.remote_vers}} > current_version        
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Updated version
 
   #Explore-GitHub-Actions:
   #  runs-on: ubuntu-latest
