@@ -40,23 +40,25 @@ jobs:
       #    echo "::set-output name=status_job2::$(<pass_status_job2/status_job2.txt)"
       #    echo "::set-output name=status_job3::$(<pass_status_job3/status_job3.txt)"
       
-      - name: Show the values of the outputs
-        run: |
-          # using the syntax steps.<step_id>.outputs.<output_name> to access the output parameters
-          echo "remote_vers = ${{ steps.step_get_remote_version.outputs.remote_vers }}"
-          echo "status_job2 = ${{ steps.set_outputs.outputs.status_job2 }}"
+      #- name: Show the values of the outputs
+      #  run: |
+      #    # using the syntax steps.<step_id>.outputs.<output_name> to access the output parameters
+      #    echo "remote_vers = ${{ steps.step_get_remote_version.outputs.remote_vers }}"
+      #    echo "status_job2 = ${{ steps.set_outputs.outputs.status_job2 }}"
           
 
       - id: step_need_update
-        if: success()
+        if: success() && steps.step_get_remote_version.remote_vers != steps.step_get_local_version.local_vers
         run:
-          echo "Result of test-app was '${{ steps.step_get_remote_version.remote_vers }}'"
-          echo "Result of test-app was '${{ steps.step_get_local_version.local_vers }}'"
-          if [[ "${{ steps.step_get_remote_version.output }}" == "${{ steps.step_get_local_version.output }}" ]]; then
-             echo "::set-output name=output::true"
-          else
-             echo "::set-output name=output::false"
-          fi
+          echo "need update"
+          echo "::set-output name=output::true"
+          #echo "Result of test-app was '${{ steps.step_get_remote_version.remote_vers }}'"
+          #echo "Result of test-app was '${{ steps.step_get_local_version.local_vers }}'"
+          #if [[ "${{ steps.step_get_remote_version.output }}" == "${{ steps.step_get_local_version.output }}" ]]; then
+          #   echo "::set-output name=output::true"
+          #else
+          #   echo "::set-output name=output::false"
+          #fi
           
 
   job2:
