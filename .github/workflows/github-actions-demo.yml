@@ -78,7 +78,7 @@ jobs:
     needs: [job1, job2]
     if: needs.job1.outputs.output1 == 'success' && needs.job2.outputs.output2 == 'success'
     steps:
-      - run: echo ${{needs.job1.outputs.output1}} ${{needs.job2.outputs.output2}}
+      - run: echo ${{needs.job1.outputs.output1}} ${{needs.job1.outputs.output2}} ${{needs.job1.outputs.output3}}  ${{needs.job2.outputs.output2}}
 
   #Explore-GitHub-Actions:
   #  runs-on: ubuntu-latest
