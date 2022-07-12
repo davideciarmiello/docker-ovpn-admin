@@ -23,7 +23,7 @@ jobs:
         run: |
           cd ovpn-admin
           gitdate=$(git log -1 --pretty='format:%cd' --date=format:'%Y%m%d%S')
-          vers=$(git describe --tags --abbrev=0).$(gitdate)
+          vers=$(git describe --tags --abbrev=0).$gitdate
           echo "remote_vers=$(vers)" >> $GITHUB_ENV
           echo "::set-output name=remote_vers::$vers"
           
