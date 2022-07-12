@@ -31,7 +31,8 @@ jobs:
           echo "step 1"
           gitdate=$(git log -1 --pretty='format:%cd' --date=format:'%Y%m%d%S')
           echo "step 2"
-          vers=$(git describe --tags --abbrev=0).$gitdate
+          vers="$(git describe --tags --abbrev=0).$gitdate"
+          echo "step 3"
           echo "Current remote version: $vers"
           #echo "remote_vers=$(vers)" >> $GITHUB_ENV
           #echo "::set-output name=remote_vers::$vers"
