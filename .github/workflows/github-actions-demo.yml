@@ -66,9 +66,10 @@ jobs:
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
+          #automatic_release_tag: "latest"
+          automatic_release_tag: "${{ steps.step_get_remote_version.remote_vers }}"
+          prerelease: false
+          title: "Version ${{ steps.step_get_remote_version.remote_vers }}"
           
     # - name: "Create release"
     #   uses: "actions/github-script@v5"
