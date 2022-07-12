@@ -62,6 +62,26 @@ jobs:
           #   echo "::set-output name=output::false"
           #fi
           
+        
+      - name: "Create release"
+        uses: "actions/github-script@v5"
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          script: |
+            try {
+              await github.rest.repos.createRelease({
+                draft: false,
+                generate_release_notes: true,
+                name: process.env.remote_vers,
+                owner: context.repo.owner,
+                prerelease: false,
+                repo: context.repo.repo,
+                tag_name: process.env.remote_vers,
+              });
+            } catch (error) {
+              core.setFailed(error.message);
+            }
+          
       - id: step_success
         if: success()
         run: echo "::set-output name=output::success"
@@ -72,9 +92,29 @@ jobs:
     needs: [version-check]
     outputs:
       output: ${{ steps.step1.outputs.test }}
+    strategy:
+      matrix:
+        goos: [linux]
+        goarch: ["386", "amd64"]
     steps:
       - id: step0
         run: echo "something"
+
+      - name: Checkout
+        run: |
+          git clone https://github.com/flant/ovpn-admin.git
+          
+      - name: build binaries
+        uses: wangyoucao577/go-release-action@v1.22
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goversion: 1.17
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          build_command: bash -ex ./build.sh
+          pre_command: bash -ex ./install-deps.sh
+          binary_name: "ovpn-admin"
+          asset_name: ovpn-admin-${{ matrix.goos }}-${{ matrix.goarch }}
 
       - id: step1
         if: success()
