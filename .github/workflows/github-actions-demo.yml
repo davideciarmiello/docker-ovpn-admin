@@ -4,8 +4,29 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.step1.outputs.test }}
+      output1: ${{ steps.step_get_remote_version.outputs.remote_vers }}
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      #- name: Clone flant/ovpn-admin repository
+      #  uses: GuillaumeFalourd/clone-github-repo-action@v2
+      #  with:
+      #    owner: 'flant'
+      #    repository: 'ovpn-admin'
+    
+      - name: Checkout
+        run: |
+          git clone --depth=1 https://github.com/flant/ovpn-admin.git
+        
+      - id: step_get_remote_version
+        name: Access cloned repository content
+        run: |
+          cd ovpn-admin
+          gitdate=$(git log -1 --pretty='format:%cd' --date=format:'%Y%m%d%S')
+          vers=$(git describe --tags --abbrev=0).$(gitdate)
+          echo "remote_vers=$(vers)" >> $GITHUB_ENV
+          echo "::set-output name=remote_vers::$vers"
+          
       - id: step0
         run: echo "something"
 
