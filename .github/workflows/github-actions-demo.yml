@@ -63,24 +63,31 @@ jobs:
           #fi
           
         
-      - name: "Create release"
-        uses: "actions/github-script@v5"
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-          script: |
-            try {
-              await github.rest.repos.createRelease({
-                draft: false,
-                generate_release_notes: true,
-                name: process.env.remote_vers,
-                owner: context.repo.owner,
-                prerelease: false,
-                repo: context.repo.repo,
-                tag_name: process.env.remote_vers,
-              });
-            } catch (error) {
-              core.setFailed(error.message);
-            }
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          
+    # - name: "Create release"
+    #   uses: "actions/github-script@v5"
+    #   with:
+    #     github-token: "${{ secrets.GITHUB_TOKEN }}"
+    #     script: |
+    #       try {
+    #         await github.rest.repos.createRelease({
+    #           draft: false,
+    #           generate_release_notes: true,
+    #           name: process.env.remote_vers,
+    #           owner: context.repo.owner,
+    #           prerelease: false,
+    #           repo: context.repo.repo,
+    #           tag_name: process.env.remote_vers,
+    #         });
+    #       } catch (error) {
+    #         core.setFailed(error.message);
+    #       }
           
       - id: step_success
         if: success()
