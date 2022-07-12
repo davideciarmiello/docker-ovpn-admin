@@ -67,11 +67,11 @@ jobs:
         run: echo "::set-output name=output::success"
         
 
-  job2:
+  job-compile-1:
     runs-on: ubuntu-latest
     needs: [version-check]
     outputs:
-      output2: ${{ steps.step1.outputs.test }}
+      output: ${{ steps.step1.outputs.test }}
     steps:
       - id: step0
         run: echo "something"
@@ -82,10 +82,11 @@ jobs:
 
   version-committ:
     runs-on: ubuntu-latest
-    needs: [version-check, job2]
-    #if: needs.job1.outputs.output1 == 'success' && needs.job2.outputs.output2 == 'success'
+    needs: [version-check, job-compile-1]
+    if: needs.version-check.outputs.output == 'success' && needs.version-check.outputs.local_vers != needs.version-check.outputs.remote_vers && needs.job-compile-1.outputs.output == 'success'
     steps:
       - run: echo ${{needs.version-check.outputs.remote_vers}} ${{needs.version-check.outputs.local_vers}} ${{needs.version-check.outputs.output}}
+      - run: echo "Save remote vers after success compile"
 
   #Explore-GitHub-Actions:
   #  runs-on: ubuntu-latest
