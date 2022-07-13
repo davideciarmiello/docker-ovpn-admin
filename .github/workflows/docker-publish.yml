@@ -24,15 +24,18 @@ jobs:
         name: Access cloned repository content
         run: |
           cd ovpn-admin
-          vers="$(git describe --tags --abbrev=0).$(git log -1 --pretty='format:%cd' --date=format:'%Y%m%d%S')"
+          git_tag=$(git describe --tags --abbrev=0)
+          git_date=$(git log -1 --pretty='format:%cd' --date=format:'%Y%m%d%S' )          
+          vers="${git_tag:-v1}.${git_date:-0}"
           echo "Current remote version: $vers"
           echo "remote_vers=$(vers)" >> $GITHUB_ENV
           echo "::set-output name=remote_vers::$vers"
           
       - id: step_get_local_version
         run: |
-          touch current_version
-          vers="$(cat current_version 2>/dev/null)"
+          mkdir -p .cache
+          touch .cache/docker_version
+          vers="$(cat .cache/docker_version 2>/dev/null)"
           echo "Current local version: $vers"
           echo "local_vers=$(vers)" >> $GITHUB_ENV
           echo "::set-output name=local_vers::$vers"
@@ -153,7 +156,8 @@ jobs:
         uses: actions/checkout@v3      
       - name: Save remote version
         run: |
-          echo ${{needs.version-check.outputs.remote_vers}} > current_version        
+          mkdir -p .cache          
+          echo ${{needs.version-check.outputs.remote_vers}} > .cache/docker_version        
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Updated version
