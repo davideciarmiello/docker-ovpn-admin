@@ -28,7 +28,7 @@ jobs:
           git_date=$(git log -1 --pretty='format:%cd' --date=format:'%Y%m%d%S' )          
           vers="${git_tag:-v1}.${git_date:-0}"
           echo "Current remote version: $vers"
-          echo "remote_vers=$(vers)" >> $GITHUB_ENV
+          #echo "remote_vers=$vers" >> $GITHUB_ENV
           echo "::set-output name=remote_vers::$vers"
           
       - id: step_get_local_version
@@ -37,7 +37,7 @@ jobs:
           touch .cache/docker_version
           vers="$(cat .cache/docker_version 2>/dev/null)"
           echo "Current local version: $vers"
-          echo "local_vers=$(vers)" >> $GITHUB_ENV
+          #echo "local_vers=$vers" >> $GITHUB_ENV
           echo "::set-output name=local_vers::$vers"
 
       - name: Show the values of the outputs
