@@ -1,10 +1,11 @@
 ARG FRONTEND_BUILDER_IMAGE=node:16.13.0-alpine3.12
+ARG BACKEND_BUILDER_IMAGE=golang:1.17.3-buster
+
 FROM $FRONTEND_BUILDER_IMAGE AS frontend-builder
 COPY ./ovpn-admin/frontend/ /app
 RUN [ ! -f "/app/frontend_builded" ] && apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
 RUN [ ! -f "/app/frontend_builded" ] && cd /app && npm install && npm run build
 
-ARG BACKEND_BUILDER_IMAGE=golang:1.17.3-buster
 FROM $BACKEND_BUILDER_IMAGE AS backend-builder
 ARG TARGETOS
 ARG TARGETARCH
