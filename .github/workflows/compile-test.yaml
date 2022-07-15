@@ -35,7 +35,7 @@ jobs:
                         
       - name: Before build script
         run: |
-          chmox +x ./before-build.sh
+          chmod +x ./before-build.sh
           bash -eux ./before-build.sh
           
       - uses: addnab/docker-run-action@v3
