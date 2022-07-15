@@ -3,8 +3,9 @@ ARG BACKEND_BUILDER_IMAGE=golang:1.17.3-buster
 
 FROM $FRONTEND_BUILDER_IMAGE AS frontend-builder
 COPY ./ovpn-admin/frontend/ /app
-RUN [ ! -f "/app/frontend_builded" ] && apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
-RUN [ ! -f "/app/frontend_builded" ] && cd /app && npm install && npm run build
+RUN test ! -e /app/frontend_builded && apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
+RUN test ! -e /app/frontend_builded && cd /app && npm install && npm run build
+RUN test -e /app/frontend_builded && echo "Frontend already builded"
 
 FROM $BACKEND_BUILDER_IMAGE AS backend-builder
 ARG TARGETOS
