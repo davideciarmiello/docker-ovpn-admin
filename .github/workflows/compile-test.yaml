@@ -40,10 +40,11 @@ jobs:
           
       - uses: addnab/docker-run-action@v3
         with:
-          #image: node:16.13.0-alpine3.12
           image: ${{ env.FRONTEND_BUILDER_IMAGE }}
-          options: -v ${{ github.workspace }}/ovpn-admin/frontend/:/app -v ${{ github.workspace }}:/ws
-          run: "/ws/tmp/frontend-builder-entrypoint.sh"
+          options: -v ${{ github.workspace }}/ovpn-admin/frontend/:/app
+          run: |
+            ls
+            ./tmp/frontend-builder-entrypoint.sh
           #run: |
           #  echo "Compiling frontend"
           #  apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
