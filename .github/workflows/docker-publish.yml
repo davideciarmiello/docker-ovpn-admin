@@ -124,7 +124,8 @@ jobs:
           run: |
             echo "Compiling frontend"
             apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
-            cd /app && npm install && npm run build            
+            cd /app && npm install && npm run build
+            echo "1" > builded
           
       - name: Build and push
         uses: docker/build-push-action@v3
