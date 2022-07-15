@@ -1,7 +1,7 @@
 name: DockerHub Publish
 on: 
   workflow_dispatch:
-  push:  
+  #push:  
   schedule:
   - cron: "0 5 * * *"
   
@@ -112,8 +112,10 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PASS }}      
-     
+          password: ${{ secrets.DOCKER_PASS }}
+      - name: Checkout ovpn-admin repository
+        run: |
+          git clone https://github.com/flant/ovpn-admin.git
       - name: Build and push
         uses: docker/build-push-action@v3
         if: needs.version-check.outputs.output == 'success' && needs.version-check.outputs.local_vers != needs.version-check.outputs.remote_vers
