@@ -1,0 +1,110 @@
+name: DockerHub Compile Test
+on: 
+  workflow_dispatch:
+  #push:  
+  
+jobs:
+  version-check:
+    runs-on: ubuntu-latest
+    outputs:
+      remote_vers: ${{ steps.step_get_remote_version.outputs.remote_vers }}
+      local_vers: ${{ steps.step_get_local_version.outputs.local_vers }}
+      output: ${{ steps.step_success.outputs.output }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+    
+      - name: Checkout
+        run: |
+          git clone https://github.com/flant/ovpn-admin.git
+
+      - uses: addnab/docker-run-action@v3
+        with:
+          #username: ${{ secrets.DOCKER_USERNAME }}
+          #password: ${{ secrets.DOCKER_PASSWORD }}
+          #registry: gcr.io
+          image: node:16.13.0-alpine3.12
+          options: -v ${{ github.workspace }}/ovpn-admin:/app -e ABC=123
+          run: |
+            echo "Running Script"
+            cd /app
+            ls
+            apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
+            npm install && npm run build
+            
+                        
+                  
+      - id: step_get_remote_version
+        name: Access cloned repository content
+        run: |
+          cd ovpn-admin
+          git_tag=$(git describe --tags --abbrev=0)
+          git_date=$(git log -1 --pretty='format:%cd' --date=format:'%Y%m%d%S' )          
+          vers="${git_tag:-v1}.${git_date:-0}"
+          echo "Current remote version: $vers"
+          #echo "remote_vers=$vers" >> $GITHUB_ENV
+          echo "::set-output name=remote_vers::$vers"
+          
+      - id: step_get_local_version
+        run: |
+          mkdir -p ./github-artifact
+          touch ./github-artifact/docker_version
+          vers="$(cat ./github-artifact/docker_version 2>/dev/null)"
+          echo "Current local version: $vers"
+          #echo "local_vers=$vers" >> $GITHUB_ENV
+          echo "::set-output name=local_vers::$vers"
+
+      - name: Show the values of the outputs
+        if: success()
+        run: |
+          # using the syntax steps.<step_id>.outputs.<output_name> to access the output parameters
+          echo "remote_vers = ${{ steps.step_get_remote_version.outputs.remote_vers }}"
+          echo "local_vers = ${{ steps.step_get_local_version.outputs.local_vers }}"
+          
+
+     #- id: step_need_update
+     #  #if: success() &&  steps.step_get_remote_version.remote_vers != steps.step_get_local_version.local_vers
+     #  if: success() && ${{ steps.step_get_remote_version.outputs.remote_vers != steps.step_get_local_version.outputs.local_vers }}
+     #  run:
+     #    echo "need update"
+     #    echo "::set-output name=output::true"
+     #    #echo "Result of test-app was '${{ steps.step_get_remote_version.remote_vers }}'"
+     #    #echo "Result of test-app was '${{ steps.step_get_local_version.local_vers }}'"
+     #    #if [[ "${{ steps.step_get_remote_version.output }}" == "${{ steps.step_get_local_version.output }}" ]]; then
+     #    #   echo "::set-output name=output::true"
+     #    #else
+     #    #   echo "::set-output name=output::false"
+     #    #fi
+          
+        
+    #- uses: "marvinpinto/action-automatic-releases@latest"
+    #  with:
+    #    repo_token: "${{ secrets.GITHUB_TOKEN }}"
+    #    #automatic_release_tag: "latest"
+    #    automatic_release_tag: "${{ steps.step_get_remote_version.remote_vers }}"
+    #    prerelease: false
+    #    title: "Version ${{ steps.step_get_remote_version.remote_vers }}"
+          
+    # - name: "Create release"
+    #   uses: "actions/github-script@v5"
+    #   with:
+    #     github-token: "${{ secrets.GITHUB_TOKEN }}"
+    #     script: |
+    #       try {
+    #         await github.rest.repos.createRelease({
+    #           draft: false,
+    #           generate_release_notes: true,
+    #           name: process.env.remote_vers,
+    #           owner: context.repo.owner,
+    #           prerelease: false,
+    #           repo: context.repo.repo,
+    #           tag_name: process.env.remote_vers,
+    #         });
+    #       } catch (error) {
+    #         core.setFailed(error.message);
+    #       }
+          
+      - id: step_success
+        if: success()
+        run: echo "::set-output name=output::success"
+        
