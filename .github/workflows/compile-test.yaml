@@ -18,21 +18,38 @@ jobs:
         run: |
           git clone https://github.com/flant/ovpn-admin.git
 
-      - uses: addnab/docker-run-action@v3
-        with:
-          #username: ${{ secrets.DOCKER_USERNAME }}
-          #password: ${{ secrets.DOCKER_PASSWORD }}
-          #registry: gcr.io
-          image: node:16.13.0-alpine3.12
-          options: -v ${{ github.workspace }}/ovpn-admin/frontend/:/app
-          run: |
-            echo "Running Script"
-            cd /app
-            ls
-            apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
-            npm install && npm run build
+      #- uses: addnab/docker-run-action@v3
+      #  with:
+      #    #username: ${{ secrets.DOCKER_USERNAME }}
+      #    #password: ${{ secrets.DOCKER_PASSWORD }}
+      #    #registry: gcr.io
+      #    image: node:16.13.0-alpine3.12
+      #    options: -v ${{ github.workspace }}/ovpn-admin/frontend/:/app
+      #    run: |
+      #      echo "Running Script"
+      #      cd /app
+      #      ls
+      #      apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
+      #      npm install && npm run build
             
                         
+      - name: Before build script
+        run: |
+          chmox +x ./before-build.sh
+          bash -eux ./before-build.sh
+          
+      - uses: addnab/docker-run-action@v3
+        with:
+          #image: node:16.13.0-alpine3.12
+          image: ${{ env.FRONTEND_BUILDER_IMAGE }}
+          options: -v ${{ github.workspace }}/ovpn-admin/frontend/:/app -v ${{ github.workspace }}:/ws
+          run: "/ws/tmp/frontend-builder-entrypoint.sh"
+          #run: |
+          #  echo "Compiling frontend"
+          #  apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
+          #  cd /app && npm install && npm run build
+          #  echo "1" > builded
+          
                   
       - id: step_get_remote_version
         name: Access cloned repository content

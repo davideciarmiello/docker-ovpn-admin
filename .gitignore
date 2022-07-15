@@ -1,3 +1,6 @@
 *.ovpn
 *.secrets
 .vs
+ovpn-admin
+*.tmp
+tmp
