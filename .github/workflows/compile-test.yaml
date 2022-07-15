@@ -46,13 +46,10 @@ jobs:
         with:
           image: ${{ env.FRONTEND_BUILDER_IMAGE }}
           options: -v ${{ github.workspace }}/ovpn-admin/frontend/:/app  -v ${{ github.workspace }}/tmp/:/wstmp
+          shell: bash
           run: |
-            ls
-            cd /wstmp
-            ls
-            echo Visualizzo file
-            cat ./frontend-builder-entrypoint.sh
-            bash ./frontend-builder-entrypoint.sh
+            echo Eseguo script
+            bash /wstmp/frontend-builder-entrypoint.sh
           #run: |
           #  echo "Compiling frontend"
           #  apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
