@@ -120,8 +120,9 @@ jobs:
       - name: Before build script
         run: "bash -eu ./before-build.sh"
           
+        #eseguo la compilazione del frontend, che se lo fa dopo ci mette tantissimo, perchè lo ricompila per ogni ambiente, e non è necessario.
       - name: "Frontend build"
-        uses: addnab/docker-run-action@v3
+        uses: addnab/docker-run-action@v3        
         with:
           image: ${{ env.FRONTEND_BUILDER_IMAGE }}
           options: 

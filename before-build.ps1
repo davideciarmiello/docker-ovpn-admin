@@ -1,0 +1,1 @@
+ docker run --rm -v ${PWD}:/data -w /data alpine sh before-build.sh
