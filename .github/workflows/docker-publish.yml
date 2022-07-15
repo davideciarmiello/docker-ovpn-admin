@@ -118,7 +118,7 @@ jobs:
           git clone https://github.com/flant/ovpn-admin.git
           
       - name: Before build script
-        run: "bash -eux ./before-build.sh"
+        run: "bash -eu ./before-build.sh"
           
       - name: "Frontend build"
         uses: addnab/docker-run-action@v3
