@@ -19,10 +19,13 @@ cd /app && npm install && npm run build
 echo 1 > frontend_builded
 echo frontend compiled
 "
-#echo "#!/usr/bin/bash" > tmp/frontend-builder-entrypoint.sh
-#echo ${FRONTEND_BUILDER_RUN} >> tmp/frontend-builder-entrypoint.sh
+echo "#!/usr/bin/bash" > tmp/frontend-builder-entrypoint.sh
+echo ${FRONTEND_BUILDER_RUN} >> tmp/frontend-builder-entrypoint.sh
 
 
+FRONTEND_BUILDER_RUN="${FRONTEND_BUILDER_RUN//'%'/'%25'}"
+FRONTEND_BUILDER_RUN="${FRONTEND_BUILDER_RUN//$'\n'/'%0A'}"
+FRONTEND_BUILDER_RUN="${FRONTEND_BUILDER_RUN//$'\r'/'%0D'}"
 echo FRONTEND_BUILDER_RUN=${FRONTEND_BUILDER_RUN} >> "$GITHUB_ENV"
 
 #chmod +x tmp/frontend-builder-entrypoint.sh
