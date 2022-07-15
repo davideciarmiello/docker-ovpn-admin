@@ -115,24 +115,20 @@ jobs:
           password: ${{ secrets.DOCKER_PASS }}
       - name: Checkout ovpn-admin repository
         run: |
-          git clone https://github.com/flant/ovpn-admin.git          
+          git clone https://github.com/flant/ovpn-admin.git
           
       - name: Before build script
-        run: |
-          chmod +x ./before-build.sh
-          bash -eux ./before-build.sh
+        run: "bash -eux ./before-build.sh"
           
-      - uses: addnab/docker-run-action@v3
+      - name: "Frontend build"
+        uses: addnab/docker-run-action@v3
         with:
-          #image: node:16.13.0-alpine3.12
           image: ${{ env.FRONTEND_BUILDER_IMAGE }}
-          options: -v ${{ github.workspace }}/ovpn-admin/frontend/:/app -v ${{ github.workspace }}:/ws
-          run: "/ws/tmp/frontend-builder-entrypoint.sh"
-          #run: |
-          #  echo "Compiling frontend"
-          #  apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
-          #  cd /app && npm install && npm run build
-          #  echo "1" > builded
+          options: 
+            -v ${{ github.workspace }}/ovpn-admin/frontend/:/app
+            -v ${{ github.workspace }}:/workspace
+            -w /workspace
+          run: ${{ env.FRONTEND_BUILDER_RUN }}
           
       - name: Build and push
         uses: docker/build-push-action@v3
@@ -144,7 +140,7 @@ jobs:
           tags: davideciarmi/ovpn-admin:latest,davideciarmi/ovpn-admin:${{needs.version-check.outputs.remote_vers}}          
           build-args: |              
               FRONTEND_BUILDER_IMAGE=${{ env.FRONTEND_BUILDER_IMAGE }}              
-              BACKEND_BUILDER_IMAGE=${{ env.BACKEND_BUILDER_IMAGE }} 
+              BACKEND_BUILDER_IMAGE=${{ env.BACKEND_BUILDER_IMAGE }}
             
      #    
 

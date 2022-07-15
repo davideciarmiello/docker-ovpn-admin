@@ -14,10 +14,6 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
     
-      - name: Checkout
-        run: |
-          git clone https://github.com/flant/ovpn-admin.git
-
       #- uses: addnab/docker-run-action@v3
       #  with:
       #    #username: ${{ secrets.DOCKER_USERNAME }}
@@ -34,18 +30,17 @@ jobs:
             
                         
       - name: Before build script
-        run: |
-          chmod +x ./before-build.sh
-          bash -eux ./before-build.sh
+        run: "bash -eux ./before-build.sh"
           
-      - uses: addnab/docker-run-action@v3
+      - name: "Frontend build"
+        uses: addnab/docker-run-action@v3
         with:
           image: ${{ env.FRONTEND_BUILDER_IMAGE }}
           options: 
             -v ${{ github.workspace }}/ovpn-admin/frontend/:/app
             -v ${{ github.workspace }}:/workspace
-          run: ${{ env.FRONTEND_BUILDER_RUN }}
-          
+            -w /workspace
+          run: ${{ env.FRONTEND_BUILDER_RUN }}          
                   
       - id: step_get_remote_version
         name: Access cloned repository content
