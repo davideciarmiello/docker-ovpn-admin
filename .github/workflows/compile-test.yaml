@@ -48,7 +48,6 @@ jobs:
           options: 
             -v ${{ github.workspace }}/ovpn-admin/frontend/:/app
             -v ${{ github.workspace }}:/workspace
-          shell: bash
           run: ${{ env.FRONTEND_BUILDER_RUN }}
           
                   
