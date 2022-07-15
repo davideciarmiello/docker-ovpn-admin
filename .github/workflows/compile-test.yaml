@@ -48,7 +48,9 @@ jobs:
           options: -v ${{ github.workspace }}/ovpn-admin/frontend/:/app  -v ${{ github.workspace }}/tmp/:/wstmp
           run: |
             ls
-            /wstmp/frontend-builder-entrypoint.sh
+            cd /wstmp
+            ls
+            ./frontend-builder-entrypoint.sh
           #run: |
           #  echo "Compiling frontend"
           #  apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
