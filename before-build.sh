@@ -6,11 +6,14 @@ echo script before-build.sh
 
 mkdir -p tmp
 
+DOCKERFILE=./ovpn-admin/Dockerfilebak
 [ ! -d "./ovpn-admin" ] && git clone https://github.com/flant/ovpn-admin.git
-[ ! -f "./ovpn-admin/Dockerfilebak" ] && cp ovpn-admin/Dockerfile  ovpn-admin/Dockerfilebak
+[ ! -f "${DOCKERFILE}" ] && cp ovpn-admin/Dockerfile "${DOCKERFILE}"
 
-FRONTEND_BUILDER_IMAGE=$(cat ovpn-admin/Dockerfilebak | grep "AS frontend-builder" | sed -e "s/^FROM //" -e "s/ AS .*//")
-BACKEND_BUILDER_IMAGE=$(cat ovpn-admin/Dockerfilebak | grep "AS backend-builder" | sed -e "s/^FROM //" -e "s/ AS .*//")
+FRONTEND_BUILDER_IMAGE=$(cat "${DOCKERFILE}" | grep "AS frontend-builder" | sed -e "s/^FROM //" -e "s/ AS .*//")
+BACKEND_BUILDER_IMAGE=$(cat "${DOCKERFILE}" | grep "AS backend-builder" | sed -e "s/^FROM //" -e "s/ AS .*//")
+
+#echo ${FRONTEND_BUILDER_IMAGE}
 
 echo FRONTEND_BUILDER_IMAGE=${FRONTEND_BUILDER_IMAGE} >> "$GITHUB_ENV"
 echo BACKEND_BUILDER_IMAGE=${BACKEND_BUILDER_IMAGE} >> "$GITHUB_ENV"
@@ -32,4 +35,4 @@ echo FRONTEND_BUILDER_RUN=${FRONTEND_BUILDER_RUN} >> "$GITHUB_ENV"
 
 #chmod +x tmp/frontend-builder-entrypoint.sh
 
-
+cp -R ovpn-admin-custom/* ovpn-admin/
