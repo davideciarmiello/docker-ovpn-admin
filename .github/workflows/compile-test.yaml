@@ -24,7 +24,7 @@ jobs:
           #password: ${{ secrets.DOCKER_PASSWORD }}
           #registry: gcr.io
           image: node:16.13.0-alpine3.12
-          options: -v ${{ github.workspace }}/ovpn-admin:/app -e ABC=123
+          options: -v ${{ github.workspace }}/ovpn-admin/frontend/:/app
           run: |
             echo "Running Script"
             cd /app
