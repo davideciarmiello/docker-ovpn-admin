@@ -20,7 +20,7 @@ echo 1 > frontend_builded
 echo frontend compiled
 "
 echo "#!/bin/sh" > tmp/frontend-builder-entrypoint.sh
-echo ${FRONTEND_BUILDER_RUN} >> tmp/frontend-builder-entrypoint.sh
+echo "${FRONTEND_BUILDER_RUN}" >> tmp/frontend-builder-entrypoint.sh
 
 FRONTEND_BUILDER_RUN="sh /workspace/tmp/frontend-builder-entrypoint.sh"
 
