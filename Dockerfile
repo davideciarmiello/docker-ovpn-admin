@@ -1,9 +1,9 @@
 FROM node:16.13.0-alpine3.12 AS frontend-builder
-RUN apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
+#RUN apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
 #RUN git clone https://github.com/flant/ovpn-admin.git /app
 #RUN cd /app && git pull
 COPY ./ovpn-admin/frontend/ /app
-RUN cd /app && npm install && npm run build
+#RUN cd /app && npm install && npm run build
 
 FROM golang:1.17.3-buster AS backend-builder
 ARG TARGETOS
