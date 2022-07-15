@@ -35,8 +35,12 @@ jobs:
                         
       - name: Before build script
         run: |
+          ls
           chmod +x ./before-build.sh
           bash -eux ./before-build.sh
+          ls
+          cd tmp
+          ls
           
       - uses: addnab/docker-run-action@v3
         with:
