@@ -1,7 +1,7 @@
 name: DockerHub Compile Test
 on: 
   workflow_dispatch:
-  #push:  
+  push:
   
 jobs:
   version-check:

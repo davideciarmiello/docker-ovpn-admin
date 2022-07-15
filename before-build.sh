@@ -7,7 +7,7 @@ echo script before-build.sh
 mkdir -p tmp
 
 [ ! -d "./ovpn-admin" ] && git clone https://github.com/flant/ovpn-admin.git
-[ ! -f "./ovpn-admin/Dockerfile" ] && cp ovpn-admin/Dockerfile  ovpn-admin/Dockerfilebak
+[ ! -f "./ovpn-admin/Dockerfilebak" ] && cp ovpn-admin/Dockerfile  ovpn-admin/Dockerfilebak
 
 FRONTEND_BUILDER_IMAGE=$(cat ovpn-admin/Dockerfilebak | grep "AS frontend-builder" | sed -e "s/^FROM //" -e "s/ AS .*//")
 BACKEND_BUILDER_IMAGE=$(cat ovpn-admin/Dockerfilebak | grep "AS backend-builder" | sed -e "s/^FROM //" -e "s/ AS .*//")
