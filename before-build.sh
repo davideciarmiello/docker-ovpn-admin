@@ -12,13 +12,19 @@ BACKEND_BUILDER_IMAGE=$(cat ovpn-admin/Dockerfile | grep "AS backend-builder" | 
 echo FRONTEND_BUILDER_IMAGE=${FRONTEND_BUILDER_IMAGE} >> "$GITHUB_ENV"
 echo BACKEND_BUILDER_IMAGE=${BACKEND_BUILDER_IMAGE} >> "$GITHUB_ENV"
 
-echo "#!/usr/bin/bash
+FRONTEND_BUILDER_RUN="
 echo Compiling frontend
 apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
 cd /app && npm install && npm run build
 echo 1 > frontend_builded
+echo frontend compiled
+"
+#echo "#!/usr/bin/bash" > tmp/frontend-builder-entrypoint.sh
+#echo ${FRONTEND_BUILDER_RUN} >> tmp/frontend-builder-entrypoint.sh
 
-" > tmp/frontend-builder-entrypoint.sh
-chmod +x tmp/frontend-builder-entrypoint.sh
+
+echo FRONTEND_BUILDER_RUN=${FRONTEND_BUILDER_RUN} >> "$GITHUB_ENV"
+
+#chmod +x tmp/frontend-builder-entrypoint.sh
 
 
