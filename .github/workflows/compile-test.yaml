@@ -50,7 +50,9 @@ jobs:
             ls
             cd /wstmp
             ls
-            ./frontend-builder-entrypoint.sh
+            echo Visualizzo file
+            cat ./frontend-builder-entrypoint.sh
+            bash ./frontend-builder-entrypoint.sh
           #run: |
           #  echo "Compiling frontend"
           #  apk add --update python3 make g++ git && rm -rf /var/cache/apk/*
